@@ -1,22 +1,11 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 * {
   font-family: 'Work Sans', sans-serif;
   font-optical-sizing: auto;
+  /* font-style: normal; */
 }
-
+body {
+  margin: 0;
+}
 .form-control {
   outline: none;
   font-size: 14px;
@@ -84,6 +73,22 @@ code {
 }
 
 /* Fix cho ReactQuill - QUAN TRỌNG */
+/* scroll custom */
+::-webkit-scrollbar {
+  width: 2px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px grey;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffd700;
+  border-radius: 10px;
+}
+
 /* Chỉ cần 2 dòng này để fix bug italic */
 .ql-snow .ql-editor {
   font-style: normal !important;
