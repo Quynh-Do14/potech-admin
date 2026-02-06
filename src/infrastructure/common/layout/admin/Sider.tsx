@@ -2,7 +2,7 @@ import styles from "../../../../asset/css/admin/layout.module.css";
 import { Tooltip, Collapse } from "antd";
 import Constants from "../../../../core/common/constants";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../../../../asset/img/logo.png";
+import logo from "../../../../asset/img/logo.jpg";
 import { useState } from "react";
 
 const { Panel } = Collapse;
@@ -28,7 +28,7 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
     return (
         <aside className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
             <h2 className={styles.logo}>
-                <img src={logo} alt="rimo" height={80} />
+                <img src={logo} alt="potech" height={60} />
             </h2>
             <nav>
                 <ul className={styles.menu}>
