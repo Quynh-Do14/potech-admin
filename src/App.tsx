@@ -1,8 +1,13 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PrivateRoute } from './infrastructure/routes/private-router';
 import { privateRoutes } from './infrastructure/routes';
+import { isTokenStoraged } from './infrastructure/utilities/storage';
+import { ROUTE_PATH } from './core/common/appRouter';
+import LoginPage from './pages/login';
+import { PublicRoute } from './infrastructure/routes/public-router';
 
 function App() {
+  const storage = isTokenStoraged();
   return (
     <div className="App">
       <BrowserRouter>
@@ -29,6 +34,8 @@ function App() {
               )
             }
           })}
+          <Route path={ROUTE_PATH.LOGIN} element={<PublicRoute component={<LoginPage />} />} />
+
         </Routes>
       </BrowserRouter>
     </div>

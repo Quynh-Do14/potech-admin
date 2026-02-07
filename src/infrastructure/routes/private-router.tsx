@@ -23,6 +23,7 @@ export const PrivateRoute = ({ component: RoutePath, role }: any) => {
     useEffect(() => {
         onGetProfileAsync().then(_ => { });
     }, []);
+    
     const isRole: boolean = role && profileState && role?.includes(profileState.role_name);
     if (profileState) {
         if (!storage) {
