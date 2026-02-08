@@ -7,7 +7,7 @@ import { CategoryProductState } from '../../core/atoms/category/categoryState';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTE_PATH } from '../../core/common/appRouter';
 import productService from '../../infrastructure/repository/product/product.service';
-import { configImageURL } from '../../infrastructure/helper/helper';
+import { configImageURL, configImageURLSplit } from '../../infrastructure/helper/helper';
 import AdminLayout from '../../infrastructure/common/layout/admin/MainLayout';
 import ButtonHref from '../../infrastructure/common/button/ButtonHref';
 import ButtonCommon from '../../infrastructure/common/button/ButtonCommon';
@@ -21,6 +21,9 @@ import TextAreaCommon from '../../infrastructure/common/input/textarea-common';
 import TextEditorCommon from '../../infrastructure/common/input/text-editor-common';
 import { FullPageLoading } from '../../infrastructure/common/loader/loading';
 import { WarningMessage } from '../../infrastructure/common/toast/message';
+import Constants from '../../core/common/constants';
+import InputSelectStatus from '../../infrastructure/common/input/select-status';
+import { ProductInterface } from '../../infrastructure/interface/product/product.interface';
 
 
 const SlugProductManagement = () => {
@@ -31,7 +34,7 @@ const SlugProductManagement = () => {
             value: 0
         },
     ])
-    const [detail, setDetail] = useState<any>({});
+    const [detail, setDetail] = useState<ProductInterface>();
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [validate, setValidate] = useState<any>({});
@@ -100,11 +103,12 @@ const SlugProductManagement = () => {
                 warranty: detail.warranty,
                 year: detail.year,
                 short_description: detail.short_description,
-                more_infomation: detail.more_infomation,
+                active: detail.active,
                 description: detail.description,
                 imagesCode: arrImgConvert, // ảnh cũ giữ nguyên
+                imagesCodeOrigin: arrImgConvert, // ảnh cũ giữ nguyên
                 remainImg: detail.images,
-                images: [] // ảnh mới chưa có
+                images: [] // ảnh mới chưa
             });
             const figures = detail.productFigure?.map((item: any, index: number) => {
                 const result = {
@@ -123,8 +127,8 @@ const SlugProductManagement = () => {
 
         if (isValidData()) {
             const listImage: any[] = dataRequest.images; // ảnh mới (chưa upload)
-            const imageOldCodes: any[] = dataRequest.imagesCode; // ảnh cũ giữ lại
-
+            const imageOldCodes: any[] = dataRequest.imagesCode?.map((url: string) => configImageURLSplit(url)); // ảnh cũ giữ lại
+            const imagesToKeep = dataRequest.remainImg?.filter((url: any) => imageOldCodes.includes(url));
             const formData = new FormData();
 
             // Append ảnh phụ mới
@@ -150,10 +154,11 @@ const SlugProductManagement = () => {
             formData.append('short_description', dataRequest.short_description);
             // formData.append('more_infomation', dataRequest.more_infomation);
             formData.append('description', dataRequest.description);
-            formData.append('productFigure', JSON.stringify(figureList));
+            formData.append('active', dataRequest.active);
+            formData.append('productFigure', JSON.stringify(figureList.filter(item => item.key && item.value)));
 
             // ✅ Truyền danh sách ảnh giữ lại để BE biết ảnh nào cần xóa
-            formData.append('remainingImages', JSON.stringify(dataRequest.remainImg));
+            formData.append('remainingImages', JSON.stringify(imagesToKeep));
 
             try {
                 await productService.UpdateProductAdmin(
@@ -237,7 +242,7 @@ const SlugProductManagement = () => {
                                     />
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <InputSelectCommon
+                                    <InputSelectStatus
                                         label={"Danh mục"}
                                         attribute={"category_id"}
                                         isRequired={true}
@@ -290,6 +295,22 @@ const SlugProductManagement = () => {
                                         submittedTime={submittedTime}
                                     />
                                 </Col>
+                                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                    <InputSelectStatus
+                                        label={"Trạng thái"}
+                                        attribute={"active"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.active}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        listDataOfItem={Constants.DisplayConfig.List}
+                                        valueName='value'
+                                        labelName='label'
+                                    />
+                                </Col>
                                 {/* <Col xs={24} sm={24} md={12}>
                                     <InputTextCommon
                                         label={"Bảo hành"}
@@ -320,7 +341,7 @@ const SlugProductManagement = () => {
                                     <UploadListImage
                                         label={"Hình ảnh"}
                                         attribute={"images"}
-                                        isRequired={true}
+                                        isRequired={false}
                                         dataAttribute={dataRequest.imagesCode}
                                         dataAttributeImageFiles={dataRequest.images}
                                         setData={setDataRequest}
@@ -351,10 +372,10 @@ const SlugProductManagement = () => {
                                             <i className="fa fa-plus-circle" aria-hidden="true"></i>
                                         </div>
 
-                                        {figureList && figureList.length && figureList.map((item, index) => (
+                                        {figureList && figureList.length ? figureList.map((item, index) => (
                                             <div key={index} className={styles.figureBox}>
                                                 <div className={styles.figureIndex}>
-                                                    <span>Ưu điểm {index + 1}</span>
+                                                    <span>Thông số {index + 1}</span>
                                                     <div onClick={() => onDeleteOption(index)}>
                                                         <i className="fa fa-trash-o" aria-hidden="true"></i>
                                                     </div>
@@ -364,7 +385,7 @@ const SlugProductManagement = () => {
                                                         <InputArrayTextCommon
                                                             label={"Tên thông số"}
                                                             attribute={"key"}
-                                                            isRequired={true}
+                                                            isRequired={false}
                                                             dataAttribute={item.key}
                                                             setData={setFigureList}
                                                             disabled={false}
@@ -379,7 +400,7 @@ const SlugProductManagement = () => {
                                                         <InputArrayTextCommon
                                                             label={"Giá trị"}
                                                             attribute={"value"}
-                                                            isRequired={true}
+                                                            isRequired={false}
                                                             dataAttribute={item.value}
                                                             setData={setFigureList}
                                                             disabled={false}
@@ -392,7 +413,9 @@ const SlugProductManagement = () => {
                                                     </Col>
                                                 </Row>
                                             </div>
-                                        ))}
+                                        ))
+                                            : null
+                                        }
                                     </div>
                                 </Col>
 
