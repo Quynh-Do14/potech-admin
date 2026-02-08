@@ -176,16 +176,6 @@ export default class Constants {
         value: "CONTACT"
       },
     ]
-    static BannerTypeConfig = class {
-      static Main = {
-        label: 'Banner chính',
-        value: "MAIN_BANNER"
-      }
-      static Sub = {
-        label: 'Banner phụ',
-        value: "SUB_BANNER"
-      }
-    }
   }
   static AdminStatusConfig = class {
     static Show = [
