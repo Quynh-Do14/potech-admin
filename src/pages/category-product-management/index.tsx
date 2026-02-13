@@ -107,7 +107,7 @@ const ProductCategoryListPage = () => {
     return (
         <AdminLayout
             breadcrumb={"Quản lý danh mục sản phẩm"}
-            title={"Quản lý danh mục sản phẩm"}
+            title={""}
             redirect={ROUTE_PATH.CATEGORY_PRODUCT_MANAGEMENT}
         >
             <div className={styles.manage_container}>
@@ -145,7 +145,7 @@ const ProductCategoryListPage = () => {
                                 </div>
                             )}
                         />
-                        <Table.Column
+                        {/* <Table.Column
                             title={
                                 <TitleTableCommon
                                     title="Ảnh"
@@ -159,7 +159,7 @@ const ProductCategoryListPage = () => {
                                     <img src={configImageURL(val)} alt="" width={150} height={150} />
                                 )
                             }}
-                        />
+                        /> */}
                         <Table.Column
                             title={
                                 <TitleTableCommon
@@ -170,7 +170,7 @@ const ProductCategoryListPage = () => {
                             key={"name"}
                             dataIndex={"name"}
                         />
-                        <Table.Column
+                        {/* <Table.Column
                             title={
                                 <TitleTableCommon
                                     title="Mô tả"
@@ -179,7 +179,7 @@ const ProductCategoryListPage = () => {
                             }
                             key={"description"}
                             dataIndex={"description"}
-                        />
+                        /> */}
                         <Table.Column
                             title={
                                 <TitleTableCommon

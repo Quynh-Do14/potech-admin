@@ -16,10 +16,12 @@ import SelectSearchCommon from '../../infrastructure/common/input/select-search-
 import { CategoryBlogState } from '../../core/atoms/category/categoryState';
 import { useRecoilValue } from 'recoil';
 import { StatusCommon } from '../../infrastructure/common/controls/Status';
+import { ActionAdvangeCommon } from '../../infrastructure/common/action/action-approve-common';
+import { BlogInterface } from '../../infrastructure/interface/blog/blog.interface';
 
 let timeout: any
 const BlogListPage = () => {
-    const [listResponse, setListResponse] = useState<Array<any>>([])
+    const [listResponse, setListResponse] = useState<Array<BlogInterface>>([])
     const [total, setTotal] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);
@@ -28,7 +30,9 @@ const BlogListPage = () => {
     const [active, setActive] = useState<string>("");
 
     const [idSelected, setIdSelected] = useState<string>("");
+    const [selectedItem, setSelectedItem] = useState<BlogInterface | null>()
 
+    const [isModalView, setIsModalView] = useState<boolean>(false);
     const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -122,13 +126,17 @@ const BlogListPage = () => {
     };
 
     const onNavigate = (id: any) => {
+        router(`${(ROUTE_PATH.EDIT_BLOG_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
+    };
+
+    const onView = (id: any) => {
         router(`${(ROUTE_PATH.VIEW_BLOG_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
-    }
+    };
 
     return (
         <AdminLayout
             breadcrumb={"Quản lý tin tức"}
-            title={"Quản lý tin tức"}
+            title={""}
             redirect={ROUTE_PATH.BLOG_MANAGEMENT}
         >
             <div className={styles.manage_container}>
@@ -137,7 +145,7 @@ const BlogListPage = () => {
                     <Col xs={24} md={7}>
                         <Input
                             className="form-control"
-                            placeholder="Tìm kiếm theo tên"
+                            placeholder="Tìm kiếm theo tiêu đề"
                             value={searchText}
                             onChange={onChangeSearchText}
                         />
@@ -191,7 +199,7 @@ const BlogListPage = () => {
                             title={
                                 <TitleTableCommon
                                     title="Tiêu đề"
-                                    width={'150px'}
+                                    width={'100px'}
                                 />
                             }
                             key={"title"}
@@ -201,7 +209,7 @@ const BlogListPage = () => {
                             title={
                                 <TitleTableCommon
                                     title="Danh mục"
-                                    width={'150px'}
+                                    width={'80px'}
                                 />
                             }
                             key={"category_name"}
@@ -211,7 +219,7 @@ const BlogListPage = () => {
                             title={
                                 <TitleTableCommon
                                     title="Mô tả"
-                                    width={'200px'}
+                                    width={'100px'}
                                 />
                             }
                             key={"short_description"}
@@ -237,6 +245,23 @@ const BlogListPage = () => {
                         <Table.Column
                             title={
                                 <TitleTableCommon
+                                    title="Bản nháp"
+                                    width={'100px'}
+                                />
+                            }
+                            key={"is_draft"}
+                            dataIndex={"is_draft"}
+                            render={(val) => {
+                                const result = Constants.DraftConfig.List.find(item => item.value == val)
+                                if (result) {
+                                    return <StatusCommon title={result.label} status={!result.value} />
+                                }
+                                return
+                            }}
+                        />
+                        <Table.Column
+                            title={
+                                <TitleTableCommon
                                     title="Thao tác"
                                     width={"60px"}
                                 />
@@ -245,8 +270,14 @@ const BlogListPage = () => {
                             align='center'
                             width={"60px"}
                             render={(action, record: any) => (
-                                <ActionCommon
+                                <ActionAdvangeCommon
+                                    show='Xem chi tiết'
+                                    onClickShow={() => onView(record.id)}
+                                    detail={'Sửa'}
                                     onClickDetail={() => onNavigate(record.id)}
+                                    approve={''}
+                                    onClickApprove={() => { }}
+                                    remove={'Xóa'}
                                     onClickDelete={() => onOpenModalDelete(record.id)}
                                 />
                             )}

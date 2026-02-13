@@ -1,6 +1,6 @@
 import { Endpoint } from "../../../core/common/apiLink";
 import { FailMessage, SuccessMessage } from "../../common/toast/message";
-import { ContactInterface, ContactParams } from "../../interface/contact/contact.interface";
+import { ContactInterface, ContactParams, ContactStatusInterface } from "../../interface/contact/contact.interface";
 import { RequestService } from "../../utilities/response";
 
 class ContactService {
@@ -66,10 +66,32 @@ class ContactService {
         } finally {
             setLoading(false);
         }
+
     }
-
+    async UpdateStatusAdmin(id: string, data: ContactStatusInterface, onBack: Function, setLoading: Function) {
+        setLoading(true)
+        try {
+            return await RequestService
+                .put(`${Endpoint.Contact.UpdateStatus}/${id}`,
+                    data
+                )
+                .then(response => {
+                    if (response) {
+                        onBack()
+                        SuccessMessage("Gửi liên hệ thành công", "")
+                        return response
+                    }
+                    setLoading(false)
+                    return response;
+                });
+        } catch (error) {
+            FailMessage("Gửi liên hệ không thành công", "Vui lòng kiểm tra thông tin")
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    }
 }
-
 const contactService = new ContactService();
 
 export default contactService;

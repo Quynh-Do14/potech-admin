@@ -47,9 +47,9 @@ const AddProductCategoryManagement = () => {
         if (isValidData()) {
             try {
                 await categoryProductService.AddCategoryAdmin({
-                    image: dataRequest.image,
+                    image: "",
                     name: dataRequest.name,
-                    description: dataRequest.description,
+                    description: "",
                 },
                     onBack,
                     setLoading
@@ -89,31 +89,32 @@ const AddProductCategoryManagement = () => {
                         />
                     </div>
                 </div>
-                <Row align="top">
-                    <Col xs={24} sm={24} md={10} lg={8} xl={6} xxl={5} className={styles.form_container}>
+                <div className={styles.table_container}>
+                    <Row align="top">
+                        {/* <Col xs={24} sm={24} md={10} lg={8} xl={6} xxl={5} className={styles.form_container}>
                         <UploadAvatar
                             dataAttribute={dataRequest.image}
                             setData={setDataRequest}
                             attribute={'image'}
                             label={'Ảnh'}
                         />
-                    </Col>
-                    <Col xs={24} sm={24} md={14} lg={16} xl={18} xxl={19} className={styles.form_container}>
-                        <Row gutter={[16, 16]}>
-                            <Col span={24}>
-                                <InputTextCommon
-                                    label={"Tên danh mục"}
-                                    attribute={"name"}
-                                    isRequired={true}
-                                    dataAttribute={dataRequest.name}
-                                    setData={setDataRequest}
-                                    disabled={false}
-                                    validate={validate}
-                                    setValidate={setValidate}
-                                    submittedTime={submittedTime}
-                                />
-                            </Col>
-                            <Col span={24}>
+                    </Col> */}
+                        <Col span={24} className={styles.form_container}>
+                            <Row gutter={[16, 16]}>
+                                <Col span={24}>
+                                    <InputTextCommon
+                                        label={"Tên danh mục"}
+                                        attribute={"name"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.name}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                    />
+                                </Col>
+                                {/* <Col span={24}>
                                 <TextAreaCommon
                                     label={"Mô tả"}
                                     attribute={"description"}
@@ -125,10 +126,11 @@ const AddProductCategoryManagement = () => {
                                     setValidate={setValidate}
                                     submittedTime={submittedTime}
                                 />
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
+                            </Col> */}
+                            </Row>
+                        </Col>
+                    </Row>
+                </div>
             </div>
             <FullPageLoading isLoading={loading} />
         </AdminLayout>

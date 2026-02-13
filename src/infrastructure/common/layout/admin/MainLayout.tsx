@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import categoryProductService from "../../../repository/category/categoryProduct.service";
 import categoryBlogService from "../../../repository/category/categoryBlog.service";
 import { useRecoilState } from "recoil";
-import { CategoryAgencyState, CategoryBlogState, CategoryProductState } from "../../../../core/atoms/category/categoryState";
+import { CategoryAgencyState, CategoryBlogState, CategoryProductState, CharacteristicState } from "../../../../core/atoms/category/categoryState";
 import { BrandState } from "../../../../core/atoms/brand/brandState";
 import brandService from "../../../repository/brand/brand.service";
 import { SeriesState } from "../../../../core/atoms/series/series";
@@ -15,6 +15,7 @@ import productService from "../../../repository/product/product.service";
 import categoryAgencyService from "../../../repository/category/categoryAgency.service";
 import { ProfileState } from "../../../../core/atoms/profile/profileState";
 import authService from "../../../repository/auth/auth.service";
+import characteristicService from "../../../repository/characteristic/characteristic.service";
 
 
 export default function AdminLayout({ breadcrumb, title, redirect, children }: any) {
@@ -25,6 +26,7 @@ export default function AdminLayout({ breadcrumb, title, redirect, children }: a
     const [, setBrandState] = useRecoilState(BrandState);
     const [, setSeriesState] = useRecoilState(SeriesState);
     const [, setProductState] = useRecoilState(ProductState);
+    const [, setCharacteristicState] = useRecoilState(CharacteristicState);
     const [profileState, setProfileState] = useRecoilState(ProfileState);
 
     const onGetListCategoryAsync = async () => {
@@ -70,6 +72,24 @@ export default function AdminLayout({ breadcrumb, title, redirect, children }: a
                 () => { }
             ).then((res) => {
                 setCategoryBlogState({
+                    data: res.data
+                })
+            })
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
+
+    const onGetListCharacteristicAsync = async () => {
+        try {
+            await characteristicService.GetCharacteristic(
+                {
+                    limit: 1000
+                },
+                () => { }
+            ).then((res) => {
+                setCharacteristicState({
                     data: res.data
                 })
             })
@@ -153,7 +173,7 @@ export default function AdminLayout({ breadcrumb, title, redirect, children }: a
         onGetListBlogCategoryAsync().then(_ => { });
         onGetListBrandAsync().then(_ => { });
         onGetListProductAsync().then(_ => { });
-        // onGetListAgencyCategoryAsync().then(_ => { });
+        onGetListCharacteristicAsync().then(_ => { });
         onGetProfileAsync().then(_ => { });
     }, []);
 

@@ -1,51 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import styles from '../../asset/css/admin/admin-component.module.css';
-import { Col, Row } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Image } from 'antd';
+import Constants from '../../core/common/constants';
+import '../../asset/css/admin/view.css';
+import { StatusCommon } from '../../infrastructure/common/controls/Status';
+import ButtonCommon from '../../infrastructure/common/button/ButtonCommon';
+import { DetailRowCommon, DetailRowComponent } from '../../infrastructure/common/text/detail-row';
+import { convertDateShow } from '../../infrastructure/helper/helper';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTE_PATH } from '../../core/common/appRouter';
-import { WarningMessage } from '../../infrastructure/common/toast/message';
-import AdminLayout from '../../infrastructure/common/layout/admin/MainLayout';
-import ButtonHref from '../../infrastructure/common/button/ButtonHref';
-import ButtonCommon from '../../infrastructure/common/button/ButtonCommon';
-import InputTextCommon from '../../infrastructure/common/input/input-text-common';
 import { FullPageLoading } from '../../infrastructure/common/loader/loading';
-import TextAreaCommon from '../../infrastructure/common/input/textarea-common';
-import videoService from '../../infrastructure/repository/video/video.service';
-import InputSelectStatus from '../../infrastructure/common/input/select-status';
-import Constants from '../../core/common/constants';
+import AdminLayout from '../../infrastructure/common/layout/admin/MainLayout';
+import { ContactInterface } from '../../infrastructure/interface/contact/contact.interface';
+import contactService from '../../infrastructure/repository/contact/contact.service';
+import styles from '../../asset/css/admin/admin-component.module.css';
 import { VideoInterface } from '../../infrastructure/interface/video/video.interface';
+import videoService from '../../infrastructure/repository/video/video.service';
+import ButtonHref from '../../infrastructure/common/button/ButtonHref';
+import YouTubeThumbnail from '../../infrastructure/common/thumbnailYoutube/thumbnailYoutube';
+import YoutubeVideo from '../../infrastructure/common/thumbnailYoutube/youtube';
 
-const SlugVideoManagement = () => {
-    const [detail, setDetail] = useState<VideoInterface>();
+const ViewVideoManagement = () => {
+    const [detail, setDetail] = useState<VideoInterface | null>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [validate, setValidate] = useState<any>({});
-    const [submittedTime, setSubmittedTime] = useState<any>();
-    const [_data, _setData] = useState<any>({});
-    const dataRequest = _data;
 
-    const setDataRequest = (data: any) => {
-        Object.assign(dataRequest, { ...data });
-        _setData({ ...dataRequest });
-    };
-
-    const isValidData = () => {
-        let allRequestOK = true;
-
-        setValidate({ ...validate });
-
-        Object.values(validate).forEach((it: any) => {
-            if (it.isError === true) {
-                allRequestOK = false;
-            }
-        });
-        return allRequestOK;
-    };
     const router = useNavigate();
     const param = useParams();
     const onBack = () => {
-        router(ROUTE_PATH.VIDEO_MANAGEMENT)
+        router(ROUTE_PATH.CONTACT_MANAGEMENT)
     }
-
     const onGetByIdAsync = async () => {
         if (param.id) {
             try {
@@ -66,129 +48,74 @@ const SlugVideoManagement = () => {
         onGetByIdAsync().then(() => { })
     }, [param.id])
 
-    useEffect(() => {
-        if (detail) {
-            setDataRequest({
-                name: detail.name,
-                link_url: detail.link_url,
-                description: detail.description,
-                active: detail.active
-            });
-        };
-    }, [detail]);
 
-    const onUpdateAsync = async () => {
-        await setSubmittedTime(Date.now());
-        if (isValidData()) {
-            try {
-                await videoService.UpdateVideoAdmin(
-                    String(param.id),
-                    {
-                        name: dataRequest.name,
-                        link_url: dataRequest.link_url,
-                        description: dataRequest.description,
-                        active: dataRequest.active
-                    },
-                    onBack,
-                    setLoading
-                );
-            } catch (error) {
-                console.error(error);
-            }
-        } else {
-            WarningMessage("Nhập thiếu thông tin", "Vui lòng nhập đầy đủ thông tin");
-        }
-    };
+    if (!detail) return null;
 
+    // Tìm thông tin trạng thái
+    const statusResult = Constants.StatusConfig.List.find(item => item.value == detail.active)
+    const videoId = detail.link_url.split('v=')[1];
     return (
         <AdminLayout
             breadcrumb={"Quản lý video"}
-            title={"Thêm video"}
-            redirect={ROUTE_PATH.VIDEO_MANAGEMENT}
+            title={"Chi tiết video"}
+            redirect={ROUTE_PATH.PRODUCT_MANAGEMENT}
         >
             <div className={styles.manage_container}>
                 <div className={styles.headerPage}>
-                    <h2>Cập nhật video</h2>
+                    <h2>Chi tiết video</h2>
                     <div className={styles.btn_container}>
-                        <ButtonHref
-                            href={ROUTE_PATH.VIDEO_MANAGEMENT}
-                            title={'Quay lại'}
+                        <ButtonCommon
+                            key="close"
+                            onClick={onBack}
+                            title={'Đóng'}
                             width={150}
                             variant={'ps-btn--gray'}
                         />
-                        <ButtonCommon
-                            onClick={onUpdateAsync}
+                        <ButtonHref
+                            href={`${(ROUTE_PATH.EDIT_VIDEO_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${detail.id}`}
                             title={'Cập nhật'}
                             width={150}
                             variant={'ps-btn--fullwidth'}
                         />
                     </div>
                 </div>
-                <Row align="top">
-                    <Col span={24} className={styles.form_container}>
-                        <Row gutter={[16, 16]}>
-                            <Col span={24}>
-                                <InputTextCommon
-                                    label={"Tiêu đề"}
-                                    attribute={"name"}
-                                    isRequired={true}
-                                    dataAttribute={dataRequest.name}
-                                    setData={setDataRequest}
-                                    disabled={false}
-                                    validate={validate}
-                                    setValidate={setValidate}
-                                    submittedTime={submittedTime}
-                                />
-                            </Col>
-                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                <InputTextCommon
-                                    label={"URL"}
-                                    attribute={"link_url"}
-                                    isRequired={true}
-                                    dataAttribute={dataRequest.link_url}
-                                    setData={setDataRequest}
-                                    disabled={false}
-                                    validate={validate}
-                                    setValidate={setValidate}
-                                    submittedTime={submittedTime}
-                                />
-                            </Col>
-                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                <InputSelectStatus
-                                    label={"Trạng thái"}
-                                    attribute={"active"}
-                                    isRequired={true}
-                                    dataAttribute={dataRequest.active}
-                                    setData={setDataRequest}
-                                    disabled={false}
-                                    validate={validate}
-                                    setValidate={setValidate}
-                                    submittedTime={submittedTime}
-                                    listDataOfItem={Constants.DisplayConfig.List}
-                                    valueName='value'
-                                    labelName='label'
-                                />
-                            </Col>
-                            <Col span={24}>
-                                <TextAreaCommon
-                                    label={"Mô tả"}
-                                    attribute={"description"}
-                                    isRequired={true}
-                                    dataAttribute={dataRequest.description}
-                                    setData={setDataRequest}
-                                    disabled={false}
-                                    validate={validate}
-                                    setValidate={setValidate}
-                                    submittedTime={submittedTime}
-                                />
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
+                <div className={styles.table_container}>
+                    <DetailRowComponent
+                        label={'Ảnh'}
+                        value={
+                            <YouTubeThumbnail name={detail.name} url={detail.link_url} />
+                        }
+                    />
+
+                    <DetailRowCommon
+                        label={'Tiêu đề'}
+                        value={detail.name}
+                    />
+                    <DetailRowComponent
+                        label={'Trạng thái'}
+                        value={
+                            statusResult
+                            &&
+                            <StatusCommon title={statusResult?.label} status={statusResult.value} />
+                        }
+                    />
+                    <DetailRowCommon
+                        label={'Mô tả'}
+                        value={detail.description || ""}
+                    />
+                    <DetailRowComponent
+                        label={'Video'}
+                        value={
+                            <YoutubeVideo
+                                videoId={videoId}
+                            />
+                        }
+                    />
+                </div>
             </div>
             <FullPageLoading isLoading={loading} />
         </AdminLayout >
-    )
-}
+    );
+};
 
-export default SlugVideoManagement
+export default ViewVideoManagement;

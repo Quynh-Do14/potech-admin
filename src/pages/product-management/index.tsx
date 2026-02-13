@@ -18,6 +18,7 @@ import { BrandState } from '../../core/atoms/brand/brandState';
 import { CategoryProductState } from '../../core/atoms/category/categoryState';
 import { StatusCommon } from '../../infrastructure/common/controls/Status';
 import { ProductInterface } from '../../infrastructure/interface/product/product.interface';
+import { ActionAdvangeCommon } from '../../infrastructure/common/action/action-approve-common';
 
 let timeout: any
 const ProductListPage = () => {
@@ -31,6 +32,8 @@ const ProductListPage = () => {
     const [active, setActive] = useState<string>("");
 
     const [idSelected, setIdSelected] = useState<string>("");
+    const [selectedItem, setSelectedItem] = useState<ProductInterface | null>()
+    const [isModalView, setIsModalView] = useState<boolean>(false);
 
     const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
 
@@ -124,15 +127,14 @@ const ProductListPage = () => {
         }
     };
 
-    const onChangeBrand = async (value: any) => {
-        setBrandId(value)
-        await onSearch(searchText, categoryId, value, active, pageSize, currentPage).then(_ => { });
-    };
-
-
     const onNavigate = (id: any) => {
+        router(`${(ROUTE_PATH.EDIT_PRODUCT_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
+    }
+
+    const onView = (id: any) => {
         router(`${(ROUTE_PATH.VIEW_PRODUCT_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
     }
+
 
     return (
         <AdminLayout
@@ -143,7 +145,7 @@ const ProductListPage = () => {
             <div className={styles.manage_container}>
                 <h2>Quản lý sản phẩm</h2>
                 <Row gutter={[15, 15]}>
-                    <Col xs={24} md={5}>
+                    <Col xs={24} md={7}>
                         <Input
                             className="form-control"
                             placeholder="Tìm kiếm theo tên"
@@ -151,7 +153,7 @@ const ProductListPage = () => {
                             onChange={onChangeSearchText}
                         />
                     </Col>
-                    <Col xs={24} md={5}>
+                    <Col xs={24} md={7}>
                         <SelectSearchCommon
                             listDataOfItem={categoryProductState}
                             onChange={onChangeCategory}
@@ -159,15 +161,7 @@ const ProductListPage = () => {
                             label={'Danh mục'}
                         />
                     </Col>
-                    <Col xs={24} md={5}>
-                        <SelectSearchCommon
-                            listDataOfItem={brandState}
-                            onChange={onChangeBrand}
-                            value={brandId}
-                            label={'Thương hiệu'}
-                        />
-                    </Col>
-                    <Col xs={24} md={5}>
+                    <Col xs={24} md={7}>
                         <SelectSearchCommon
                             listDataOfItem={Constants.DisplayConfig.List}
                             onChange={onChangeActive}
@@ -177,7 +171,7 @@ const ProductListPage = () => {
                             valueName='value'
                         />
                     </Col>
-                    <Col xs={24} md={4}>
+                    <Col xs={24} md={3}>
                         <ButtonHref
                             href={ROUTE_PATH.ADD_PRODUCT_MANAGEMENT}
                             title={'Thêm mới'}
@@ -228,22 +222,12 @@ const ProductListPage = () => {
                             title={
                                 <TitleTableCommon
                                     title="Thương hiệu"
-                                    width={'150px'}
+                                    width={'100px'}
                                 />
                             }
                             key={"brand_name"}
                             dataIndex={"brand_name"}
-                        />
-                        <Table.Column
-                            title={
-                                <TitleTableCommon
-                                    title="Mô tả ngắn"
-                                    width={'200px'}
-                                />
-                            }
-                            key={"short_description"}
-                            dataIndex={"short_description"}
-                        />
+                        />c
                         <Table.Column
                             title={
                                 <TitleTableCommon
@@ -272,8 +256,14 @@ const ProductListPage = () => {
                             align='center'
                             width={"60px"}
                             render={(action, record: any) => (
-                                <ActionCommon
+                                <ActionAdvangeCommon
+                                    show='Xem chi tiết'
+                                    onClickShow={() => onView(record.id)}
+                                    detail={'Sửa'}
                                     onClickDetail={() => onNavigate(record.id)}
+                                    approve={''}
+                                    onClickApprove={() => { }}
+                                    remove={'Xóa'}
                                     onClickDelete={() => onOpenModalDelete(record.id)}
                                 />
                             )}

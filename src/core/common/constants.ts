@@ -48,13 +48,13 @@ export default class Constants {
             icon: 'fas fa-folder-open',
             role: ["ADMIN", 'WRITTER']
           },
-          // {
-          //   id: 'series',
-          //   text: 'Dòng sản phẩm',
-          //   url: ROUTE_PATH.CATEGORY_AGENCY_MANAGEMENT,
-          //   icon: 'fas fa-layer-group',
-          //   role: ["ADMIN", 'SELLER']
-          // }
+          {
+            id: 'series',
+            text: 'Tính năng sản phẩm',
+            url: ROUTE_PATH.CHARACTERISTIC_MANAGEMENT,
+            icon: 'fas fa-layer-group',
+            role: ["ADMIN", 'SELLER']
+          }
         ]
       },
       {
@@ -171,6 +171,30 @@ export default class Constants {
       },
       {
         label: 'Không hiển thị',
+        value: false
+      },
+    ]
+  }
+  static DraftConfig = class {
+    static List = [
+      {
+        label: 'Lưu nháp',
+        value: true
+      },
+      {
+        label: 'Hoàn thiện',
+        value: false
+      },
+    ]
+  }
+  static StatusConfig = class {
+    static List = [
+      {
+        label: 'Đã xử lí',
+        value: true
+      },
+      {
+        label: 'Chưa xử lí',
         value: false
       },
     ]

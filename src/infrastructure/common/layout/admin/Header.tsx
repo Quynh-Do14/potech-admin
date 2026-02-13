@@ -21,11 +21,7 @@ export default function Header(props: Props) {
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const breadCrumb = [
-        {
-            text: 'Trang chủ',
-            url: '/',
-        },
-        {
+         {
             text: breadcrumb,
             url: redirect,
         },

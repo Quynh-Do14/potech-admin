@@ -11,12 +11,13 @@ export interface ProductInterface {
     created_at?: string;
     brand_id?: number | null;
     short_description: string;
-    category_name?: string;
+    category_name: string;
     brand_name?: string | null;
     images: string[];
     productFigure: ProductFigure[]
     active: boolean;
     sameCategoryProducts: ProductInterface[]
+    characteristicProduct: CharacteristicProduct[]
 }
 
 export interface ProductFigure {
@@ -33,4 +34,10 @@ export interface ProductParams {
 export interface ProductHref {
     href: string
     label: string
+}
+
+export interface CharacteristicProduct {
+    characteristic_name: string,
+    characteristic_id: number,
+    product_id: number
 }

@@ -3,7 +3,7 @@ import styles from '../../asset/css/admin/admin-component.module.css';
 import { Col, Row } from 'antd';
 import { useRecoilValue } from 'recoil';
 import { BrandState } from '../../core/atoms/brand/brandState';
-import { CategoryProductState } from '../../core/atoms/category/categoryState';
+import { CategoryProductState, CharacteristicState } from '../../core/atoms/category/categoryState';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTE_PATH } from '../../core/common/appRouter';
 import productService from '../../infrastructure/repository/product/product.service';
@@ -24,6 +24,7 @@ import { WarningMessage } from '../../infrastructure/common/toast/message';
 import Constants from '../../core/common/constants';
 import InputSelectStatus from '../../infrastructure/common/input/select-status';
 import { ProductInterface } from '../../infrastructure/interface/product/product.interface';
+import ComboBoxCommon from '../../infrastructure/common/input/combo-box-common';
 
 
 const SlugProductManagement = () => {
@@ -61,6 +62,7 @@ const SlugProductManagement = () => {
     };
     const brandState = useRecoilValue(BrandState).data;
     const categoryProductState = useRecoilValue(CategoryProductState).data;
+    const characteristicState = useRecoilValue(CharacteristicState).data;
 
     const router = useNavigate();
     const param = useParams();
@@ -108,6 +110,7 @@ const SlugProductManagement = () => {
                 imagesCode: arrImgConvert, // ảnh cũ giữ nguyên
                 imagesCodeOrigin: arrImgConvert, // ảnh cũ giữ nguyên
                 remainImg: detail.images,
+                characteristic_product: detail.characteristicProduct.map((item) => item.characteristic_id),
                 images: [] // ảnh mới chưa
             });
             const figures = detail.productFigure?.map((item: any, index: number) => {
@@ -148,7 +151,7 @@ const SlugProductManagement = () => {
             formData.append('category_id', dataRequest.category_id);
             formData.append('brand_id', dataRequest.brand_id);
             formData.append('price', dataRequest.price);
-            formData.append('price_sale', dataRequest.price_sale);
+            formData.append('price_sale', dataRequest.price_sale || 0);
             // formData.append('warranty', dataRequest.warranty);
             // formData.append('year', dataRequest.year);
             formData.append('short_description', dataRequest.short_description);
@@ -156,6 +159,7 @@ const SlugProductManagement = () => {
             formData.append('description', dataRequest.description);
             formData.append('active', dataRequest.active);
             formData.append('productFigure', JSON.stringify(figureList.filter(item => item.key && item.value)));
+            formData.append('characteristic_product', JSON.stringify(dataRequest.characteristic_product));
 
             // ✅ Truyền danh sách ảnh giữ lại để BE biết ảnh nào cần xóa
             formData.append('remainingImages', JSON.stringify(imagesToKeep));
@@ -256,7 +260,7 @@ const SlugProductManagement = () => {
                                     />
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <InputSelectCommon
+                                    <InputSelectStatus
                                         label={"Thương hiệu"}
                                         attribute={"brand_id"}
                                         isRequired={true}
@@ -309,6 +313,22 @@ const SlugProductManagement = () => {
                                         listDataOfItem={Constants.DisplayConfig.List}
                                         valueName='value'
                                         labelName='label'
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <ComboBoxCommon
+                                        label={"Tính năng sản phầm"}
+                                        attribute={"characteristic_product"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.characteristic_product}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        listDataOfItem={characteristicState}
+                                        valueName='id'
+                                        labelName='name'
                                     />
                                 </Col>
                                 {/* <Col xs={24} sm={24} md={12}>

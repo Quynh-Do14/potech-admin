@@ -91,7 +91,7 @@ const AddAgencyManagement = () => {
         try {
             await districtService.getAll(
                 param,
-                setLoading
+                () => { }
             ).then((res) => {
                 setListProvince(res);
             })
@@ -106,7 +106,7 @@ const AddAgencyManagement = () => {
             try {
                 await districtService.getDetail(
                     String(dataRequest.province).split('-')[0],
-                    setLoading
+                    () => { }
                 ).then((res) => {
                     setListDistrict(res.districts);
                 })
@@ -123,7 +123,7 @@ const AddAgencyManagement = () => {
 
     useEffect(() => {
         onGetListDistrictAsync().then(_ => { });
-    }, [dataRequest]);
+    }, [dataRequest.province]);
 
     return (
         <AdminLayout

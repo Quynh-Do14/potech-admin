@@ -19,10 +19,11 @@ import TextEditorCommon from '../../infrastructure/common/input/text-editor-comm
 import { FullPageLoading } from '../../infrastructure/common/loader/loading';
 import InputSelectStatus from '../../infrastructure/common/input/select-status';
 import Constants from '../../core/common/constants';
+import { BlogInterface } from '../../infrastructure/interface/blog/blog.interface';
 
 
 const SlugBlogManagement = () => {
-    const [detail, setDetail] = useState<any>({});
+    const [detail, setDetail] = useState<BlogInterface>();
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [validate, setValidate] = useState<any>({});
@@ -100,6 +101,7 @@ const SlugBlogManagement = () => {
                     blog_category_id: dataRequest.blog_category_id,
                     description: dataRequest.description,
                     active: dataRequest.active,
+                    is_draft: false
                 };
 
                 if (dataRequest.image !== originalImage) {
@@ -120,10 +122,36 @@ const SlugBlogManagement = () => {
         }
     };
 
+    const onUpdateDraftAsync = async () => {
+        try {
+            const payload: any = {
+                title: dataRequest.title,
+                short_description: dataRequest.short_description,
+                blog_category_id: dataRequest.blog_category_id,
+                description: dataRequest.description,
+                active: false,
+                is_draft: true
+            };
+
+            if (dataRequest.image !== originalImage) {
+                payload.image = dataRequest.image;
+            }
+
+            await blogService.UpdateBlogAdmin(
+                String(param.id),
+                payload,
+                onBack,
+                setLoading
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <AdminLayout
             breadcrumb={"Quản lý tin tức"}
-            title={"Thêm tin tức"}
+            title={"Cập nhật tin tức"}
             redirect={ROUTE_PATH.BLOG_MANAGEMENT}
         >
             <div className={styles.manage_container}>
@@ -135,6 +163,12 @@ const SlugBlogManagement = () => {
                             title={'Quay lại'}
                             width={150}
                             variant={'ps-btn--gray'}
+                        />
+                        <ButtonCommon
+                            onClick={onUpdateDraftAsync}
+                            title={'Cập nhật bản nháp'}
+                            width={200}
+                            variant={'ps-btn--fullwidth'}
                         />
                         <ButtonCommon
                             onClick={onUpdateAsync}

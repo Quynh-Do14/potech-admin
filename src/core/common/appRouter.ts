@@ -20,6 +20,7 @@ export const ROUTE_PATH = {
     PRODUCT_MANAGEMENT: `${PREFIX}/product-management`,
     ADD_PRODUCT_MANAGEMENT: `${PREFIX}/product-management/add`,
     VIEW_PRODUCT_MANAGEMENT: `${PREFIX}/product-management/view/:id`,
+    EDIT_PRODUCT_MANAGEMENT: `${PREFIX}/product-management/edit/:id`,
 
     PRODUCT_SERIES_MANAGEMENT: `${PREFIX}/product-series-management`,
     ADD_PRODUCT_SERIES_MANAGEMENT: `${PREFIX}/product-series-management/add`,
@@ -35,6 +36,7 @@ export const ROUTE_PATH = {
 
     BLOG_MANAGEMENT: `${PREFIX}/blog-management`,
     ADD_BLOG_MANAGEMENT: `${PREFIX}/blog-management/add`,
+    EDIT_BLOG_MANAGEMENT: `${PREFIX}/blog-management/edit/:id`,
     VIEW_BLOG_MANAGEMENT: `${PREFIX}/blog-management/view/:id`,
 
     BRAND_MANAGEMENT: `${PREFIX}/brand-management`,
@@ -43,16 +45,29 @@ export const ROUTE_PATH = {
 
     AGENCY_MANAGEMENT: `${PREFIX}/agency-management`,
     ADD_AGENCY_MANAGEMENT: `${PREFIX}/agency-management/add`,
+    EDIT_AGENCY_MANAGEMENT: `${PREFIX}/agency-management/edit/:id`,
     VIEW_AGENCY_MANAGEMENT: `${PREFIX}/agency-management/view/:id`,
 
     CATEGORY_AGENCY_MANAGEMENT: `${PREFIX}/agency-category-management`,
     ADD_CATEGORY_AGENCY_MANAGEMENT: `${PREFIX}/agency-category-management/add`,
     VIEW_CATEGORY_AGENCY_MANAGEMENT: `${PREFIX}/agency-category-management/view/:id`,
 
+    CHARACTERISTIC_MANAGEMENT: `${PREFIX}/characteristic-management`,
+    ADD_CHARACTERISTIC_MANAGEMENT: `${PREFIX}/characteristic-management/add`,
+    VIEW_CHARACTERISTIC_MANAGEMENT: `${PREFIX}/characteristic-management/view/:id`,
+
     VIDEO_MANAGEMENT: `${PREFIX}/video-management`,
     ADD_VIDEO_MANAGEMENT: `${PREFIX}/video-management/add`,
+    EDIT_VIDEO_MANAGEMENT: `${PREFIX}/video-management/edit/:id`,
     VIEW_VIDEO_MANAGEMENT: `${PREFIX}/video-management/view/:id`,
 
+    SLOGAN_MANAGEMENT: `${PREFIX}/slogan-management`,
+    ADD_SLOGAN_MANAGEMENT: `${PREFIX}/slogan-management/add`,
+    EDIT_SLOGAN_MANAGEMENT: `${PREFIX}/slogan-management/edit/:id`,
+    EDIT_INDEX_SLOGAN_MANAGEMENT: `${PREFIX}/slogan-management/edit-index`,
+    VIEW_SLOGAN_MANAGEMENT: `${PREFIX}/slogan-management/view/:id`,
+
     CONTACT_MANAGEMENT: `${PREFIX}/contact-management`,
+    VIEW_CONTACT_MANAGEMENT: `${PREFIX}/contact-management/view/:id`,
 
 }

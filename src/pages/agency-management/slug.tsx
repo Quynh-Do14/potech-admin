@@ -94,7 +94,6 @@ const SlugAgencyManagement = () => {
                 star_rate: detail.star_rate,
                 active: detail.active,
                 agency_categories_type: detail.agency_categories_type.map((item) => item.category_id)
-
             });
         };
     }, [detail]);
@@ -142,7 +141,7 @@ const SlugAgencyManagement = () => {
         try {
             await districtService.getAll(
                 param,
-                setLoading
+                () => { }
             ).then((res) => {
                 setListProvince(res);
             })
@@ -157,7 +156,7 @@ const SlugAgencyManagement = () => {
             try {
                 await districtService.getDetail(
                     String(dataRequest.province).split('-')[0],
-                    setLoading
+                    () => { }
                 ).then((res) => {
                     setListDistrict(res.districts);
                 })
@@ -174,7 +173,7 @@ const SlugAgencyManagement = () => {
 
     useEffect(() => {
         onGetListDistrictAsync().then(_ => { });
-    }, [dataRequest]);
+    }, [dataRequest.province]);
 
     return (
         <AdminLayout

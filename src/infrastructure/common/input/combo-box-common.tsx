@@ -94,7 +94,7 @@ const ComboBoxCommon = ({
                 allowClear
                 showSearch={true}
                 style={{ width: '100%' }}
-                placeholder={`Chọn ${labelLower}`}
+                // placeholder={`Chọn ${labelLower}`}
                 onChange={onChange}
                 onBlur={() => validateBlur(false)}
                 value={value}
