@@ -107,6 +107,7 @@ const SlugProductManagement = () => {
                 short_description: detail.short_description,
                 active: detail.active,
                 description: detail.description,
+                index: detail.index,
                 imagesCode: arrImgConvert, // ảnh cũ giữ nguyên
                 imagesCodeOrigin: arrImgConvert, // ảnh cũ giữ nguyên
                 remainImg: detail.images,
@@ -151,10 +152,11 @@ const SlugProductManagement = () => {
             formData.append('category_id', dataRequest.category_id);
             formData.append('brand_id', dataRequest.brand_id);
             formData.append('price', dataRequest.price);
-            formData.append('price_sale', dataRequest.price_sale || 0);
+            formData.append('price_sale', dataRequest.price_sale);
             // formData.append('warranty', dataRequest.warranty);
             // formData.append('year', dataRequest.year);
             formData.append('short_description', dataRequest.short_description);
+            formData.append('index', dataRequest.index);
             // formData.append('more_infomation', dataRequest.more_infomation);
             formData.append('description', dataRequest.description);
             formData.append('active', dataRequest.active);
@@ -271,6 +273,19 @@ const SlugProductManagement = () => {
                                         setValidate={setValidate}
                                         submittedTime={submittedTime}
                                         listDataOfItem={brandState}
+                                    />
+                                </Col>
+                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <InputNumberCommon
+                                        label={"Số thứ tự"}
+                                        attribute={"index"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.index}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                     />
                                 </Col>
                                 <Col xs={24} sm={24} md={12}>

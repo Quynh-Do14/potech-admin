@@ -16,8 +16,10 @@ export interface ProductInterface {
     images: string[];
     productFigure: ProductFigure[]
     active: boolean;
+    index?: number;
     sameCategoryProducts: ProductInterface[]
     characteristicProduct: CharacteristicProduct[]
+
 }
 
 export interface ProductFigure {
@@ -34,6 +36,13 @@ export interface ProductParams {
 export interface ProductHref {
     href: string
     label: string
+}
+
+export interface UpdateIndexProductInterface {
+    id: string, index: number
+}
+export interface UpdateIndexProductRequestInterface {
+    items: UpdateIndexProductInterface[]
 }
 
 export interface CharacteristicProduct {

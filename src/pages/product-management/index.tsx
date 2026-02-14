@@ -19,6 +19,7 @@ import { CategoryProductState } from '../../core/atoms/category/categoryState';
 import { StatusCommon } from '../../infrastructure/common/controls/Status';
 import { ProductInterface } from '../../infrastructure/interface/product/product.interface';
 import { ActionAdvangeCommon } from '../../infrastructure/common/action/action-approve-common';
+import ProductDetailModal from './view';
 
 let timeout: any
 const ProductListPage = () => {
@@ -145,7 +146,7 @@ const ProductListPage = () => {
             <div className={styles.manage_container}>
                 <h2>Quản lý sản phẩm</h2>
                 <Row gutter={[15, 15]}>
-                    <Col xs={24} md={7}>
+                    <Col xs={24} md={6}>
                         <Input
                             className="form-control"
                             placeholder="Tìm kiếm theo tên"
@@ -153,7 +154,7 @@ const ProductListPage = () => {
                             onChange={onChangeSearchText}
                         />
                     </Col>
-                    <Col xs={24} md={7}>
+                    <Col xs={24} md={6}>
                         <SelectSearchCommon
                             listDataOfItem={categoryProductState}
                             onChange={onChangeCategory}
@@ -161,7 +162,7 @@ const ProductListPage = () => {
                             label={'Danh mục'}
                         />
                     </Col>
-                    <Col xs={24} md={7}>
+                    <Col xs={24} md={6}>
                         <SelectSearchCommon
                             listDataOfItem={Constants.DisplayConfig.List}
                             onChange={onChangeActive}
@@ -169,6 +170,13 @@ const ProductListPage = () => {
                             label={'Trạng thái'}
                             labelName='label'
                             valueName='value'
+                        />
+                    </Col>
+                    <Col xs={24} md={3}>
+                        <ButtonHref
+                            href={ROUTE_PATH.EDIT_INDEX_PRODUCT_MANAGEMENT}
+                            title={'Thay đổi vị trí'}
+                            variant={'ps-btn--fullwidth'}
                         />
                     </Col>
                     <Col xs={24} md={3}>
@@ -212,7 +220,7 @@ const ProductListPage = () => {
                             title={
                                 <TitleTableCommon
                                     title="Danh mục"
-                                    width={'150px'}
+                                    width={'100px'}
                                 />
                             }
                             key={"category_name"}
@@ -227,7 +235,27 @@ const ProductListPage = () => {
                             }
                             key={"brand_name"}
                             dataIndex={"brand_name"}
-                        />c
+                        />
+                        <Table.Column
+                            title={
+                                <TitleTableCommon
+                                    title="Thứ tự"
+                                    width={'100px'}
+                                />
+                            }
+                            key={"index"}
+                            dataIndex={"index"}
+                        />
+                        <Table.Column
+                            title={
+                                <TitleTableCommon
+                                    title="Mô tả ngắn"
+                                    width={'100px'}
+                                />
+                            }
+                            key={"short_description"}
+                            dataIndex={"short_description"}
+                        />
                         <Table.Column
                             title={
                                 <TitleTableCommon
