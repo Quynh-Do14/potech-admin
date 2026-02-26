@@ -1,3 +1,7 @@
+.passwordWrapper {
+  position: relative;
+}
+
 .inputCommon {
   display: flex;
   flex-direction: column;
