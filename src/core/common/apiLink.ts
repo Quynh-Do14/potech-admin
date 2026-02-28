@@ -121,4 +121,8 @@ export class Endpoint {
         static Update = "/characteristic"
         static Delete = "/characteristic"
     }
+    static Upload = class {
+        static Single = "/upload/single"
+
+    }
 }
