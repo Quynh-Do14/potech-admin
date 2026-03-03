@@ -73,7 +73,7 @@ body {
 /* Fix cho ReactQuill - QUAN TRỌNG */
 /* scroll custom */
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 4px;
   height: 4px;
 }
 
@@ -197,4 +197,146 @@ body {
   .table-common {
     width: calc(65vh);
   }
+}
+
+/* Quill Editor */
+.ql-editor {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+.ql-editor.ql-blank::before {
+  font-size: 16px !important;
+  font-style: normal !important;
+}
+
+/* ===== DARK THEME ===== */
+.quill-dark-editor .ql-container {
+  background: linear-gradient(180deg, #1c1915 0%, #302c26 100%);
+  border-color: #444 !important;
+}
+
+.quill-dark-editor .ql-editor {
+  color: #fff;
+}
+
+.quill-dark-editor .ql-editor.ql-blank::before {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== LIGHT THEME ===== */
+.quill-light-editor .ql-container {
+  background: #fff;
+  border-color: #ccc !important;
+}
+
+.quill-light-editor .ql-editor {
+  color: #333;
+}
+
+.quill-light-editor .ql-editor.ql-blank::before {
+  color: #999;
+}
+
+/* ===== TOOLBAR - Giữ nguyên cho cả 2 theme ===== */
+.ql-toolbar {
+  background: #fff !important;
+  border-color: #ddd !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+
+/* Optional: Tăng size cho toolbar icons */
+.ql-toolbar button .ql-stroke {
+  stroke-width: 2 !important;
+}
+
+.ql-toolbar button .ql-fill {
+  fill: #333 !important;
+}
+
+.ql-editor {
+  font-size: 2rem !important; /* hoặc 20px tùy ý */
+}
+
+.ql-editor.ql-blank::before {
+  font-size: 2rem !important;
+}
+
+/* Section Header */
+.section-header.dark {
+  background: #1a1a1a;
+}
+.section-header.light {
+  background: #fff;
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  gap: 16px;
+  padding: 20px;
+}
+
+.section-header p {
+  margin: 0;
+}
+.section-header strong {
+  font-weight: 800;
+}
+
+.section-header .section-badge {
+  display: inline-block;
+  background: linear-gradient(90deg, #ffd700, #ffa500);
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.section-header .badge-text {
+  color: #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.section-header .section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #000;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.section-header .section-title-white {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  text-align: center;
+}
+.section-header .section-title-white .highlight,
+.section-header .section-title .highlight {
+  color: #ffd700;
+  position: relative;
+}
+
+.section-header .section-subtitle {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 500px;
+  text-align: center;
+}
+
+.section-header .section-subtitle-white {
+  font-size: 1rem;
+  color: #fff;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 500px;
+  text-align: center;
 }

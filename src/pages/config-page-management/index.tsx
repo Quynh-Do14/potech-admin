@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Input, Col, Row, } from 'antd';
+import { Table, Input, Row, Col } from 'antd';
 import styles from '../../asset/css/admin/admin-component.module.css';
 import { useNavigate } from 'react-router-dom';
 import Constants from '../../core/common/constants';
@@ -7,31 +7,22 @@ import AdminLayout from '../../infrastructure/common/layout/admin/MainLayout';
 import { ROUTE_PATH } from '../../core/common/appRouter';
 import ButtonHref from '../../infrastructure/common/button/ButtonHref';
 import { TitleTableCommon } from '../../infrastructure/common/text/title-table-common';
-import { configImageURL } from '../../infrastructure/helper/helper';
 import { ActionCommon } from '../../infrastructure/common/action/action-common';
 import { PaginationCommon } from '../../infrastructure/common/pagination/PaginationPageSize';
 import DialogConfirmCommon from '../../infrastructure/common/modal/dialogConfirm';
 import { FullPageLoading } from '../../infrastructure/common/loader/loading';
-import agencyService from '../../infrastructure/repository/agency/agency.service';
-import districtService from '../../infrastructure/repository/district/district.service';
+import { ConfigPageInterface } from '../../infrastructure/interface/configPage/configPage.interface';
+import configPageService from '../../infrastructure/repository/config-page/configPage.service';
 import SelectSearchCommon from '../../infrastructure/common/input/select-search-common';
-import SelectSearchProvince from '../../infrastructure/common/input/select-search-province';
-import { StatusCommon } from '../../infrastructure/common/controls/Status';
-import { ActionAdvangeCommon } from '../../infrastructure/common/action/action-approve-common';
-import { AgencyInterface } from '../../infrastructure/interface/agency/agency.interface';
 
 let timeout: any
-const AgencyListPage = () => {
-    const [listResponse, setListResponse] = useState<Array<AgencyInterface>>([])
+const ConfigPageListPage = () => {
+    const [listResponse, setListResponse] = useState<Array<ConfigPageInterface>>([])
     const [total, setTotal] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [searchText, setSearchText] = useState<string>("");
-    const [province, setProvince] = useState<string>("");
-    const [district, setDistrict] = useState<string>("");
-    const [active, setActive] = useState<string>("");
-    const [listProvince, setListProvince] = useState<Array<any>>([])
-    const [listDistrict, setListDistrict] = useState<Array<any>>([])
+    const [type, setType] = useState<string>("");
     const [idSelected, setIdSelected] = useState<string>("");
 
     const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
@@ -40,17 +31,15 @@ const AgencyListPage = () => {
 
     const router = useNavigate();
 
-    const onGetListAsync = async ({ search = "", province = "", district = "", active = "", size = pageSize, page = currentPage }) => {
+    const onGetListAsync = async ({ search = "", type = "", size = pageSize, page = currentPage, }) => {
         const param = {
             page: page,
             limit: size,
             search: search,
-            province: province,
-            district: district,
-            active: active
+            type: type
         }
         try {
-            await agencyService.GetAgency(
+            await configPageService.GetConfigPage(
                 param,
                 setLoading
             ).then((res) => {
@@ -62,15 +51,15 @@ const AgencyListPage = () => {
             console.error(error)
         }
     }
-    const onSearch = async (search = "", province = "", district = "", active = "", size = pageSize, page = 1) => {
-        await onGetListAsync({ search: search, province: province, district: district, active: active, size: size, page: page });
+    const onSearch = async (search = "", type = "", size = pageSize, page = 1) => {
+        await onGetListAsync({ search: search, type: type, size: size, page: page });
     };
 
-    const onChangeSearchText = (e: any) => {
+    const onChangeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value);
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            onSearch(e.target.value, province, district, active, pageSize, currentPage,).then((_) => { });
+            onSearch(e.target.value, type, pageSize, currentPage,).then((_) => { });
         }, Constants.DEBOUNCE_SEARCH);
     };
 
@@ -80,32 +69,22 @@ const AgencyListPage = () => {
 
     const onChangePage = async (value: any) => {
         setCurrentPage(value)
-        await onSearch(searchText, province, district, active, pageSize, value).then(_ => { });
+        await onSearch(searchText, type, pageSize, value).then(_ => { });
     };
 
     const onPageSizeChanged = async (value: any) => {
         setPageSize(value)
         setCurrentPage(1)
-        await onSearch(searchText, province, district, active, value, 1).then(_ => { });
+        await onSearch(searchText, type, value, 1).then(_ => { });
     };
 
-    const onChangeProvince = async (value: any) => {
-        setProvince(value)
-        await onSearch(searchText, value, district, active, pageSize, currentPage).then(_ => { });
-    };
-
-    const onChangeDistrict = async (value: any) => {
-        setDistrict(value)
-        await onSearch(searchText, province, value, active, pageSize, currentPage).then(_ => { });
-    };
-
-    const onChangeActive = async (value: any) => {
-        setActive(value)
-        await onSearch(searchText, province, district, value, pageSize, currentPage).then(_ => { });
+    const onChangeType = async (value: string) => {
+        setType(value)
+        await onSearch(searchText, value, pageSize, currentPage).then(_ => { });
     };
 
     // Xóa bài
-    const onOpenModalDelete = (id: any) => {
+    const onOpenModalDelete = (id: string) => {
         setIsDeleteModal(true);
         setIdSelected(id)
     };
@@ -116,7 +95,7 @@ const AgencyListPage = () => {
 
     const onDeleteAsync = async () => {
         try {
-            await agencyService.DeleteAgencyAdmin(
+            await configPageService.DeleteConfigPageAdmin(
                 idSelected,
                 setLoading
             ).then((res) => {
@@ -131,111 +110,50 @@ const AgencyListPage = () => {
         }
     };
     const onNavigate = (id: any) => {
-        router(`${(ROUTE_PATH.EDIT_AGENCY_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
+        router(`${(ROUTE_PATH.EDIT_CONFIG_PAGE_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
     }
-
-    const onView = (id: any) => {
-        router(`${(ROUTE_PATH.VIEW_AGENCY_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
-    };
-
-
-    const onGetListProvinceAsync = async () => {
-        const param = {
-
-        }
-        try {
-            await districtService.getAll(
-                param,
-                setLoading
-            ).then((res) => {
-                setListProvince(res);
-            })
-        }
-        catch (error) {
-            console.error(error);
-        }
-    }
-
-    const onGetListDistrictAsync = async () => {
-        if (province) {
-            try {
-                await districtService.getDetail(
-                    String(province).split('-')[0],
-                    setLoading
-                ).then((res) => {
-                    setListDistrict(res.districts);
-                })
-            }
-            catch (error) {
-                console.error(error);
-            }
-        }
-    };
-
-    useEffect(() => {
-        onGetListProvinceAsync().then(_ => { });
-    }, []);
-
-    useEffect(() => {
-        onGetListDistrictAsync().then(_ => { });
-    }, [province]);
-
     return (
         <AdminLayout
-            breadcrumb={"Quản lý đại lý"}
-            title={"Quản lý đại lý"}
-            redirect={ROUTE_PATH.AGENCY_MANAGEMENT}
+            breadcrumb={"Quản lý nội dung"}
+            title={""}
+            redirect={ROUTE_PATH.CONFIG_PAGE_MANAGEMENT}
         >
             <div className={styles.manage_container}>
-                <h2>Quản lý đại lý</h2>
+                <h2>Quản lý nội dung</h2>
                 <Row gutter={[15, 15]}>
-                    <Col xs={24} md={5}>
+                    <Col xs={24} md={9}>
                         <Input
                             className="form-control"
-                            placeholder="Tìm kiếm theo tên"
+                            placeholder="Tìm kiếm theo tiêu đề"
                             value={searchText}
                             onChange={onChangeSearchText}
                         />
                     </Col>
-                    <Col xs={24} md={5}>
-                        <SelectSearchProvince
-                            listDataOfItem={listProvince}
-                            onChange={onChangeProvince}
-                            value={province}
-                            label={'Tỉnh/TP'}
-                            valueName='code'
-                            labelName='name'
-                        />
-                    </Col>
-                    <Col xs={24} md={5}>
+                    <Col xs={24} md={9}>
                         <SelectSearchCommon
-                            listDataOfItem={listDistrict}
-                            onChange={onChangeDistrict}
-                            value={district}
-                            label={'Huyện'}
-                            valueName='name'
-                            labelName='name'
-                        />
-                    </Col>
-                    <Col xs={24} md={5}>
-                        <SelectSearchCommon
-                            listDataOfItem={Constants.DisplayConfig.List}
-                            onChange={onChangeActive}
-                            value={active}
-                            label={'Trạng thái'}
+                            listDataOfItem={Constants.ConfigPage.List}
+                            onChange={onChangeType}
+                            value={type}
+                            label={'Loại nội dung'}
                             labelName='label'
                             valueName='value'
                         />
                     </Col>
-                    <Col xs={24} md={4}>
+                    <Col xs={24} md={3}>
                         <ButtonHref
-                            href={ROUTE_PATH.ADD_AGENCY_MANAGEMENT}
+                            href={ROUTE_PATH.EDIT_INDEX_CONFIG_PAGE_MANAGEMENT}
+                            title={'Thay đổi vị trí'}
+                            variant={'ps-btn--fullwidth'}
+                        />
+                    </Col>
+                    <Col xs={24} md={3}>
+                        <ButtonHref
+                            href={ROUTE_PATH.ADD_CONFIG_PAGE_MANAGEMENT}
                             title={'Thêm mới'}
                             variant={'ps-btn--fullwidth'}
                         />
                     </Col>
                 </Row>
-
                 <div className={styles.table_container}>
                     <Table
                         dataSource={listResponse}
@@ -258,53 +176,68 @@ const AgencyListPage = () => {
                         <Table.Column
                             title={
                                 <TitleTableCommon
-                                    title="Ảnh"
+                                    title="Tiêu đề"
                                     width={'150px'}
                                 />
                             }
-                            key={"image"}
-                            dataIndex={"image"}
-                            render={(val, record) => {
+                            key={"title"}
+                            dataIndex={"title"}
+                            render={(val, record: ConfigPageInterface) => {
+                                const result = Constants.ConfigPage.List.find(item => item.value == record.type)
                                 return (
-                                    <img src={configImageURL(val)} alt="" width={150} height={150} />
+                                    <article
+                                        style={{
+                                            background: result?.darkBackground ? "linear-gradient(180deg, #1c1915 0%, #302c26 100%)" : "#FFF",
+                                            textAlign: 'center',
+                                            padding: "12px 0"
+                                        }}
+                                        dangerouslySetInnerHTML={{ __html: val }}
+                                    />
                                 )
                             }}
                         />
                         <Table.Column
                             title={
                                 <TitleTableCommon
-                                    title="Tên đại lý"
+                                    title="Nội dung thẻ"
                                     width={'150px'}
                                 />
                             }
-                            key={"name"}
-                            dataIndex={"name"}
+                            key={"box_content"}
+                            dataIndex={"box_content"}
                         />
                         <Table.Column
                             title={
                                 <TitleTableCommon
-                                    title="Địa chỉ"
-                                    width={'200px'}
+                                    title="Mô tả"
+                                    width={'150px'}
                                 />
                             }
-                            key={"address"}
-                            dataIndex={"address"}
+                            key={"description"}
+                            dataIndex={"description"}
                         />
                         <Table.Column
                             title={
                                 <TitleTableCommon
-                                    title="Trạng thái"
+                                    title="Thứ tự"
                                     width={'100px'}
                                 />
                             }
-                            key={"active"}
-                            dataIndex={"active"}
-                            render={(val) => {
-                                const result = Constants.DisplayConfig.List.find(item => item.value == val)
-                                if (result) {
-                                    return <StatusCommon title={result.label} status={result.value} />
-                                }
-                                return
+                            key={"index"}
+                            dataIndex={"index"}
+                        />
+                        <Table.Column
+                            title={
+                                <TitleTableCommon
+                                    title="Loại nội dung"
+                                    width={'200px'}
+                                />
+                            }
+                            key={"type"}
+                            dataIndex={"type"}
+                            render={(val, _record) => {
+                                const result = Constants.ConfigPage.List.find(item => item.value == val)
+                                return <div>{result?.label || ""}</div>
                             }}
                         />
                         <Table.Column
@@ -318,14 +251,8 @@ const AgencyListPage = () => {
                             align='center'
                             width={"60px"}
                             render={(action, record: any) => (
-                                <ActionAdvangeCommon
-                                    show='Xem chi tiết'
-                                    onClickShow={() => onView(record.id)}
-                                    detail={'Sửa'}
+                                <ActionCommon
                                     onClickDetail={() => onNavigate(record.id)}
-                                    approve={''}
-                                    onClickApprove={() => { }}
-                                    remove={'Xóa'}
                                     onClickDelete={() => onOpenModalDelete(record.id)}
                                 />
                             )}
@@ -343,7 +270,7 @@ const AgencyListPage = () => {
                     />
                 </div>
                 <DialogConfirmCommon
-                    message={"Bạn có muốn xóa đại lý này ra khỏi hệ thống"}
+                    message={"Bạn có muốn xóa nội dung này ra khỏi hệ thống"}
                     titleCancel={"Bỏ qua"}
                     titleOk={"Xóa"}
                     visible={isDeleteModal}
@@ -357,4 +284,4 @@ const AgencyListPage = () => {
 
     );
 }
-export default AgencyListPage;
+export default ConfigPageListPage;

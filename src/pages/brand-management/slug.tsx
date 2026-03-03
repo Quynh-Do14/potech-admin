@@ -12,10 +12,11 @@ import { Col, Row } from 'antd';
 import UploadAvatar from '../../infrastructure/common/input/upload-image';
 import InputTextCommon from '../../infrastructure/common/input/input-text-common';
 import { FullPageLoading } from '../../infrastructure/common/loader/loading';
+import { BrandInterface } from '../../infrastructure/interface/brand/brand.interface';
 
 
 const SlugBrandManagement = () => {
-    const [detail, setDetail] = useState<any>({});
+    const [detail, setDetail] = useState<BrandInterface>();
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [validate, setValidate] = useState<any>({});

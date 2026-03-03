@@ -105,7 +105,7 @@ const SlugProductCategoryManagement = () => {
                         image: "",
                         name: dataRequest.name,
                         description: "",
-                        index: dataRequest.index
+                        index: dataRequest.index,
                     },
                     onBack,
                     setLoading

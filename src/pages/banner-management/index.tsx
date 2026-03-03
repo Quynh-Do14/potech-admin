@@ -15,10 +15,11 @@ import DialogConfirmCommon from '../../infrastructure/common/modal/dialogConfirm
 import { FullPageLoading } from '../../infrastructure/common/loader/loading';
 import SelectSearchCommon from '../../infrastructure/common/input/select-search-common';
 import { StatusCommon } from '../../infrastructure/common/controls/Status';
+import { BannerInterface } from '../../infrastructure/interface/banner/banner.interface';
 
 let timeout: any
 const BannerListPage = () => {
-    const [listResponse, setListResponse] = useState<Array<any>>([])
+    const [listResponse, setListResponse] = useState<Array<BannerInterface>>([])
     const [total, setTotal] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);

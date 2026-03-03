@@ -1,9 +1,10 @@
 import { Endpoint } from "../../../core/common/apiLink";
 import { FailMessage, SuccessMessage } from "../../common/toast/message";
+import { BrandInterface, BrandParams } from "../../interface/brand/brand.interface";
 import { RequestService } from "../../utilities/response";
 
 class BrandService {
-    async GetBrand(params: any, setLoading: Function) {
+    async GetBrand(params: BrandParams, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
@@ -43,7 +44,7 @@ class BrandService {
     };
 
 
-    async AddBrandAdmin(data: object, onBack: Function, setLoading: Function) {
+    async AddBrandAdmin(data: BrandInterface, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
@@ -66,7 +67,7 @@ class BrandService {
             setLoading(false);
         }
     }
-    async UpdateBrandAdmin(id: string, data: object, onBack: Function, setLoading: Function) {
+    async UpdateBrandAdmin(id: string, data: BrandInterface, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService

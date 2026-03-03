@@ -6,7 +6,7 @@ export interface CategoryProductInterface {
     description: string;
     image: string;
     index: number;
-    products: ProductInterface[]
+    products?: ProductInterface[]
 }
 
 export interface CategoryProductParams {

@@ -15,10 +15,11 @@ import InputSelectCommon from '../../infrastructure/common/input/select-common';
 import Constants from '../../core/common/constants';
 import { FullPageLoading } from '../../infrastructure/common/loader/loading';
 import InputSelectStatus from '../../infrastructure/common/input/select-status';
+import { BannerInterface } from '../../infrastructure/interface/banner/banner.interface';
 
 
 const SlugBannerManagement = () => {
-    const [detail, setDetail] = useState<any>({});
+    const [detail, setDetail] = useState<BannerInterface>();
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [validate, setValidate] = useState<any>({});

@@ -1,15 +1,15 @@
 import { Endpoint } from "../../../core/common/apiLink";
 import { FailMessage, SuccessMessage } from "../../common/toast/message";
-import { CategoryBlogInterface, CategoryBlogParams } from "../../interface/category/categoryBlog.interface";
+import { UpdateIndexCategoryRequestInterface } from "../../interface/category/categoryProduct.interface";
+import { ConfigPageInterface, ConfigPageParams } from "../../interface/configPage/configPage.interface";
 import { RequestService } from "../../utilities/response";
 
-
-class CategoryBlogService {
-    async GetBlogCategory(params: CategoryBlogParams, setLoading: Function) {
+class ConfigPageService {
+    async GetConfigPage(params: ConfigPageParams, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(Endpoint.BlogCategory.Get, {
+                .get(Endpoint.ConfigPage.Get, {
                     ...params
                 })
                 .then(response => {
@@ -25,11 +25,11 @@ class CategoryBlogService {
             setLoading(false);
         }
     };
-    async GetBlogCategoryById(id: string, setLoading: Function) {
+    async GetConfigPageById(id: string, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(`${Endpoint.BlogCategory.GetById}/${id}`)
+                .get(`${Endpoint.ConfigPage.GetById}/${id}`)
                 .then(response => {
                     if (response) {
                         return response
@@ -45,11 +45,11 @@ class CategoryBlogService {
     };
 
 
-    async AddBlogCategoryAdmin(data: CategoryBlogInterface, onBack: Function, setLoading: Function) {
+    async AddConfigPageAdmin(data: ConfigPageInterface, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .post(Endpoint.BlogCategory.Add,
+                .post(Endpoint.ConfigPage.Add,
                     data
                 )
                 .then(response => {
@@ -68,11 +68,11 @@ class CategoryBlogService {
             setLoading(false);
         }
     }
-    async UpdateBlogCategoryAdmin(id: string, data: CategoryBlogInterface, onBack: Function, setLoading: Function) {
+    async UpdateConfigPageAdmin(id: string, data: ConfigPageInterface, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .put(`${Endpoint.BlogCategory.Update}/${id}`,
+                .put(`${Endpoint.ConfigPage.Update}/${id}`,
                     data
                 )
                 .then(response => {
@@ -91,14 +91,17 @@ class CategoryBlogService {
             setLoading(false);
         }
     }
-    async DeleteBlogCategoryAdmin(id: string, setLoading: Function) {
+    async UpdateIndexConfigPageAdmin(data: UpdateIndexCategoryRequestInterface, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .delete(`${Endpoint.BlogCategory.Delete}/${id}`, {})
+                .put(Endpoint.ConfigPage.UpdateIndex,
+                    data
+                )
                 .then(response => {
                     if (response) {
-                        SuccessMessage("Xóa thành công", "")
+                        onBack()
+                        SuccessMessage("Cập nhật thành công", "")
                         return response
                     }
                     setLoading(false)
@@ -111,8 +114,29 @@ class CategoryBlogService {
             setLoading(false);
         }
     }
+
+    async DeleteConfigPageAdmin(id: string, setLoading: Function) {
+        setLoading(true)
+        try {
+            return await RequestService
+                .delete(`${Endpoint.ConfigPage.Delete}/${id}`, {})
+                .then(response => {
+                    if (response) {
+                        SuccessMessage("Xóa thành công", "")
+                        return response
+                    }
+                    setLoading(false)
+                    return response;
+                });
+        } catch (error: any) {
+            FailMessage("Xóa không thành công", error.response.data.message || "Vui lòng kiểm tra thông tin")
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    }
 }
 
-const categoryBlogService = new CategoryBlogService();
+const configPageService = new ConfigPageService();
 
-export default categoryBlogService;
+export default configPageService;
