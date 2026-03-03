@@ -264,7 +264,7 @@ export default class Constants {
         label: 'Khung 1',
         value: "SECTION_1",
         isShowBackground: true,
-        darkBackground: false,
+        darkBackground: true,
         image: section1
       },
       {

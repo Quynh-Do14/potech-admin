@@ -233,7 +233,7 @@ const AddConfigPageManagement = () => {
                                                     {
                                                         dataRequest?.description
                                                             ?
-                                                            <p className={`${isDarkBackground ? "section-subtitle" : "section-subtitle-white"}`}>
+                                                            <p className={`${isDarkBackground ? "section-subtitle-white" : "section-subtitle"}`}>
                                                                 {dataRequest?.description}
                                                             </p>
                                                             :
