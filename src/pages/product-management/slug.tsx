@@ -26,6 +26,8 @@ import InputSelectStatus from '../../infrastructure/common/input/select-status';
 import { ProductInterface } from '../../infrastructure/interface/product/product.interface';
 import ComboBoxCommon from '../../infrastructure/common/input/combo-box-common';
 import RichTextEditor from '../../infrastructure/common/input/richTextEditor';
+import InputSlugCommon from '../../infrastructure/common/input/input-slug-common';
+import InputMultiCommon from '../../infrastructure/common/input/input-multi';
 
 
 const SlugProductManagement = () => {
@@ -109,11 +111,13 @@ const SlugProductManagement = () => {
                 active: detail.active,
                 description: detail.description,
                 index: detail.index,
+                slug: detail.slug,
                 imagesCode: arrImgConvert, // ảnh cũ giữ nguyên
                 imagesCodeOrigin: arrImgConvert, // ảnh cũ giữ nguyên
                 remainImg: detail.images,
                 characteristic_product: detail.characteristicProduct.map((item) => item.characteristic_id),
-                images: [] // ảnh mới chưa
+                images: [], // ảnh mới chưa
+                keyword: detail.keyword.map((item) => item.keyword)
             });
             const figures = detail.productFigure?.map((item: any, index: number) => {
                 const result = {
@@ -158,6 +162,7 @@ const SlugProductManagement = () => {
             // formData.append('year', dataRequest.year);
             formData.append('short_description', dataRequest.short_description);
             formData.append('index', dataRequest.index);
+            formData.append('slug', dataRequest.slug);
             // formData.append('more_infomation', dataRequest.more_infomation);
             formData.append('description', dataRequest.description);
             formData.append('active', dataRequest.active);
@@ -166,6 +171,7 @@ const SlugProductManagement = () => {
 
             // ✅ Truyền danh sách ảnh giữ lại để BE biết ảnh nào cần xóa
             formData.append('remainingImages', JSON.stringify(imagesToKeep));
+            formData.append('keyword', JSON.stringify(dataRequest.keyword));
 
             try {
                 await productService.UpdateProductAdmin(
@@ -241,6 +247,33 @@ const SlugProductManagement = () => {
                                         attribute={"name"}
                                         isRequired={true}
                                         dataAttribute={dataRequest.name}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <InputSlugCommon
+                                        label={"Đường dẫn"}
+                                        attribute={"slug"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.slug}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        titleValue={dataRequest.name}
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <InputMultiCommon
+                                        label={"Từ khóa"}
+                                        attribute={"keyword"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.keyword}
                                         setData={setDataRequest}
                                         disabled={false}
                                         validate={validate}

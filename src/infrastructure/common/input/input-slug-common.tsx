@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { MessageError } from '../controls/MessageError';
-import { validateFields } from '../../helper/helper';
-import { validateCMND, validateEmail, validatePhoneNumber } from '../../helper/validate';
+import { convertSlug, validateFields } from '../../helper/helper';
 import styles from "../../../asset/css/common/input.module.css"
 
 type Props = {
@@ -14,9 +13,11 @@ type Props = {
     validate: any;
     setValidate: Function,
     submittedTime: any,
+    titleValue: string
+    isUpdate?: boolean
 }
 
-const InputTextCommon = (props: Props) => {
+const InputSlugCommon = (props: Props) => {
     const {
         label,
         attribute,
@@ -26,43 +27,67 @@ const InputTextCommon = (props: Props) => {
         disabled = false,
         validate,
         setValidate,
-        submittedTime
+        submittedTime,
+        titleValue,
+        isUpdate = false
     } = props;
     const [value, setValue] = useState<string>("");
+    const [isFocused, setIsFocused] = useState<boolean>(false);
+    const prevTitleValueRef = useRef<string>(titleValue);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value || "");
+        const newValue = e.target.value || "";
+        setValue(newValue);
         setData({
-            [attribute]: e.target.value || ''
+            [attribute]: newValue
         });
     };
+
     const labelLower = label?.toLowerCase();
+
     const onBlur = (isImplicitChange = false) => {
-        let checkValidate
+        setIsFocused(false);
         if (isRequired) {
             validateFields(isImplicitChange, attribute, !value, setValidate, validate, !value ? `Vui lòng nhập ${labelLower}` : "");
-            // if (attribute.includes("username")) {
-            //     checkValidate = validateName(value);
-            //     validateFields(isImplicitChange, attribute, !checkValidate, setValidate, validate, !checkValidate ? value ? `Vui lòng nhập ${labelLower} với hơn 6 kí tự` : `Vui lòng nhập ${labelLower}` : "");
-            // }
-            if (attribute.includes("email")) {
-                checkValidate = validateEmail(value);
-                validateFields(isImplicitChange, attribute, !checkValidate, setValidate, validate, !checkValidate ? value ? `Vui lòng nhập đúng định dạng ${labelLower}` : `Vui lòng nhập ${labelLower}` : "");
-            }
-            if (attribute.includes("phone")) {
-                checkValidate = validatePhoneNumber(value);
-                validateFields(isImplicitChange, attribute, !checkValidate, setValidate, validate, !checkValidate ? value ? `Vui lòng nhập đúng định dạng ${labelLower}` : `Vui lòng nhập ${labelLower}` : "");
-            }
-            if (attribute.includes("cccd")) {
-                checkValidate = validateCMND(value);
-                validateFields(isImplicitChange, attribute, !checkValidate, setValidate, validate, !checkValidate ? value ? `${label} bao gồm 12 số` : `Vui lòng nhập ${labelLower}` : "");
-            }
         }
     };
 
-    useEffect(() => {
-        setValue(dataAttribute || '');
+    const handleFocus = () => {
+        setIsFocused(true);
+    };
 
+    useEffect(() => {
+        if (isUpdate) {
+            const slugValue = convertSlug(dataAttribute) || '';
+            setValue(slugValue);
+            setData({
+                [attribute]: slugValue
+            });
+        }
+        else if (titleValue) {
+            const slugValue = convertSlug(titleValue) || '';
+            setValue(slugValue);
+            setData({
+                [attribute]: slugValue
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!isFocused && titleValue && titleValue !== prevTitleValueRef.current) {
+            const slugValue = convertSlug(titleValue) || '';
+            setValue(slugValue);
+            setData({
+                [attribute]: slugValue
+            });
+        }
+        prevTitleValueRef.current = titleValue;
+    }, [titleValue, isFocused]);
+
+    useEffect(() => {
+        if (dataAttribute !== undefined && dataAttribute !== value) {
+            setValue(dataAttribute || '');
+        }
     }, [dataAttribute]);
 
     useEffect(() => {
@@ -80,9 +105,10 @@ const InputTextCommon = (props: Props) => {
             </label>
             <input
                 id={`${attribute}-input`}
-                value={value ? value : ""}
+                value={value || ""}
                 onChange={onChange}
                 onBlur={() => onBlur(false)}
+                onFocus={handleFocus}
                 disabled={disabled}
                 placeholder={`Nhập ${labelLower}`}
                 type="text"
@@ -92,4 +118,4 @@ const InputTextCommon = (props: Props) => {
     );
 };
 
-export default InputTextCommon;
+export default InputSlugCommon;

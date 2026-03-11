@@ -24,6 +24,8 @@ import InputSelectStatus from '../../infrastructure/common/input/select-status';
 import Constants from '../../core/common/constants';
 import ComboBoxCommon from '../../infrastructure/common/input/combo-box-common';
 import RichTextEditor from '../../infrastructure/common/input/richTextEditor';
+import InputSlugCommon from '../../infrastructure/common/input/input-slug-common';
+import InputMultiCommon from '../../infrastructure/common/input/input-multi';
 
 const AddProductManagement = () => {
     const [figureList, setFigureList] = useState<any[]>([
@@ -87,9 +89,11 @@ const AddProductManagement = () => {
             formData.append('price_sale', dataRequest.price_sale || 0);
             formData.append('short_description', dataRequest.short_description);
             formData.append('index', dataRequest.index);
+            formData.append('slug', dataRequest.slug);
             formData.append('description', dataRequest.description);
             formData.append('productFigure', JSON.stringify(figureList.filter(item => item.key && item.value)));
             formData.append('characteristic_product', JSON.stringify(dataRequest.characteristic_product));
+            formData.append('keyword', JSON.stringify(dataRequest.keyword));
 
             try {
                 await productService.AddProductAdmin(formData, onBack, setLoading);
@@ -161,6 +165,33 @@ const AddProductManagement = () => {
                                         attribute={"name"}
                                         isRequired={true}
                                         dataAttribute={dataRequest.name}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <InputSlugCommon
+                                        label={"Đường dẫn"}
+                                        attribute={"slug"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.slug}
+                                        setData={setDataRequest}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        titleValue={dataRequest.name}
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <InputMultiCommon
+                                        label={"Từ khóa"}
+                                        attribute={"keyword"}
+                                        isRequired={true}
+                                        dataAttribute={dataRequest.keyword}
                                         setData={setDataRequest}
                                         disabled={false}
                                         validate={validate}

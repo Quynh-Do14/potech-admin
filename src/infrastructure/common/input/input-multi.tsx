@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { MessageError } from '../controls/MessageError';
 import { validateFields } from '../../helper/helper';
-import styles from "../../../asset/css/common/input.module.css"
+import "../../../asset/css/common/input-custom.css"
+import { Select } from 'antd';
 type Props = {
     label: string;
     attribute: string;
@@ -12,26 +13,20 @@ type Props = {
     validate: any;
     setValidate: Function;
     submittedTime: any;
-    listDataOfItem: Array<any>;
-    valueName?: string;
-    labelName?: string;
 };
 
-const InputSelectStatus = ({
+const InputMultiCommon = ({
     dataAttribute,
     setData,
     attribute,
     disabled,
-    listDataOfItem,
     setValidate,
     validate,
     submittedTime,
     isRequired,
     label,
-    valueName = 'id',
-    labelName = 'name'
 }: Props) => {
-    const [value, setValue] = useState<string>("");
+    const [value, setValue] = useState<string[]>([]);
 
     const labelLower = label.toLowerCase();
 
@@ -41,17 +36,19 @@ const InputSelectStatus = ({
         }
     };
 
-    const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedValue = e.target.value;
+    const onChange = (value: string[]) => {
+        const selectedValue = value;
         setValue(selectedValue);
+        console.log('selectedValue', selectedValue);
+
         setData({ [attribute]: selectedValue });
     };
 
     useEffect(() => {
         if (dataAttribute !== undefined && dataAttribute !== null) {
-            setValue(String(dataAttribute));
+            setValue(dataAttribute);
         } else {
-            setValue('');
+            setValue([]);
         }
     }, [dataAttribute]);
 
@@ -62,31 +59,23 @@ const InputSelectStatus = ({
     }, [submittedTime]);
 
     return (
-        <div className={styles.inputCommon}>
+        <div className='input-custom'>
             <label htmlFor={`${attribute}-input`}>
                 <span>
-                    {label} {isRequired && <span className={styles.required}>*</span>}
+                    {label} {isRequired && <span className="required">*</span>}
                 </span>
             </label>
 
-            <select
-                id={`${attribute}-input`}
-                value={value}
+            <Select
+                mode="tags"
+                allowClear
+                showSearch={true}
+                style={{ width: '100%' }}
+                placeholder={`Chọn ${labelLower}`}
                 onChange={onChange}
                 onBlur={() => validateBlur(false)}
-                disabled={disabled}
-            >
-                <option value="">-- Chọn {labelLower} --</option>
-                {listDataOfItem?.map((item, index) => (
-                    <option
-                        key={index}
-                        value={item[valueName]}
-                        title={item[labelName]}
-                    >
-                        {item[labelName]}
-                    </option>
-                ))}
-            </select>
+                value={value}
+            />
 
             <MessageError
                 isError={validate[attribute]?.isError || false}
@@ -96,4 +85,4 @@ const InputSelectStatus = ({
     );
 };
 
-export default InputSelectStatus;
+export default InputMultiCommon;
